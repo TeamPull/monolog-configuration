@@ -14,16 +14,16 @@ class MonologFactory implements LoggerFactoryInterface
     protected $vars;
 
     function __construct($vars){
-
+        $this->vars = $vars;
     }
 
     protected $monologConfig;
     protected function loadMonologConfig()
     {
-        $config = Registry::get("oxConfigFile");
-        $path = $config->getVar('sShopDir') . '../monolog.yaml';
+        
+        $path = $this->vars['kernel.root_dir'] . '../monolog.yaml';
         if(!file_exists($path)){
-            $path = $config->getVar('sShopDir') . '../monolog.dist.yaml';
+            $path = $this->vars['kernel.root_dir'] . '../monolog.dist.yaml';
         }
         //Do not try catch parse erors because the system should
         // not continue to work until the configuration is fixed
