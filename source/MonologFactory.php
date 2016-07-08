@@ -67,7 +67,7 @@ class MonologFactory implements LoggerFactoryInterface
             $components = $channelConfig["${component}s"];
             if(is_array($components)){
                foreach($components as $componentConfig){
-                  if(!is_array($processorConfig)){
+                  if(!is_array($componentConfig)){
                       $componentConfig = $this->monologConfig["${component}s"][$componentConfig];
                   }
                   $component = $getter($componentConfig);
@@ -77,12 +77,12 @@ class MonologFactory implements LoggerFactoryInterface
         }
 
         $componentBuilder('handler',
-            function($config){$this->getHandler($config);},
-            function($handler){$log->pushHandler($handler);}
+            [$this,'getHandler'],
+            [$log,'pushHandler']
             );
         $componentBuilder('processor',
-            function($config){$this->getProcessor($config);},
-            function($processor){$log->pushProcessor($processor);}
+            [$this,'getProcessor'],
+            [$log,'pushProcessor']
             );
         return $log;
     }
