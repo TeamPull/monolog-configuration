@@ -61,27 +61,42 @@ class MonologFactory implements LoggerFactoryInterface
         if ($channelConfig['register_php_handlers']) {
             ErrorHandler::register($log);
         }
-        $handlers = $channelConfig['handlers'];
-        if(is_array($handlers)){
-           foreach($handlers as $handlerConfig){
-               $handler = $this->getHandler($handlerConfig);
-               $log->pushHandler($handler);
-           }
+
+        
+        $componentBuilder = function($component,$getter,$pusher){
+            $components = $channelConfig["${component}s"];
+            if(is_array($components)){
+               foreach($components as $componentConfig){
+                  if(!is_array($processorConfig)){
+                      $componentConfig = $this->monologConfig["${component}s"][$componentConfig];
+                  }
+                  $component = $getter($componentConfig);
+                  $pusher($component);
+               }
+            }
         }
-        
-        //Todo pushProcessors
-        
-        /*
-         * every enhancing of the root logger that would create cycle dependencies during bootstrap
-         * should be done in a separate class called after basic bootstrapping
-         */
+
+        $componentBuilder('handler',
+            function($config){$this->getHandler($config);},
+            function($handler){$log->pushHandler($handler);}
+            );
+        $componentBuilder('processor',
+            function($config){$this->getProcessor($config);},
+            function($processor){$log->pushProcessor($processor);}
+            );
         return $log;
     }
+
+    /**
+     * @return callable
+     */
+    public function getProcessor($processorConfig)
+    {
+       
+    }
+
     public function getHandler($handlerConfig)
     {
-        if(!is_array($handlerConfig)){
-             $handlerConfig = $this->monologConfig['handlers'][$handlerConfig];
-        }
         
         $type = $handlerConfig['type'];
         $levels = Logger::getLevels();
