@@ -62,19 +62,18 @@ class MonologFactory implements LoggerFactoryInterface
             ErrorHandler::register($log);
         }
 
-        
+        /**
+         * Gets a components (handler,processor) from the configuration
+         */
         $componentBuilder = function($component,$getter,$pusher){
             $components = $channelConfig["${component}s"];
             if(is_array($components)){
-               foreach($components as $componentConfig){
-                  if(!is_array($componentConfig)){
-                      $componentConfig = $this->monologConfig["${component}s"][$componentConfig];
-                  }
+               foreach($components as $componentConfig){               
                   $component = $getter($componentConfig);
                   $pusher($component);
                }
             }
-        }
+        };
 
         $componentBuilder('handler',
             [$this,'getHandler'],
@@ -86,18 +85,24 @@ class MonologFactory implements LoggerFactoryInterface
             );
         return $log;
     }
+    
+    public function getNamedComponent($componentType,&$componentConfig){
+        if(!is_array($componentConfig)){
+             $componentConfig = $this->monologConfig[componentType][$componentConfig];
+        }               
+    }
 
     /**
      * @return callable
      */
     public function getProcessor($processorConfig)
     {
-       
+        $this->getNamedComponent('processors',$processorConfig);
     }
 
     public function getHandler($handlerConfig)
     {
-        
+        $this->getNamedComponent('handlers',$processorConfig); 
         $type = $handlerConfig['type'];
         $levels = Logger::getLevels();
         $level =  $levels[strtoupper($handlerConfig['level'])];
