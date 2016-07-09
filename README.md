@@ -1,3 +1,6 @@
+ 
+[![Build Status](https://travis-ci.org/keywan-ghadami-oxid/monolog-configuration.svg?branch=master)](https://travis-ci.org/keywan-ghadami-oxid/monolog-configuration)
+
 # monolog-configuration
 configuration support for the php logger library monolog
 
