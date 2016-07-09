@@ -6,6 +6,7 @@ class MonologFactoryTest extends \PHPUnit_Framework_TestCase
     public function testGetLogger()
     {
         $vars = [
+            'monolog_config_dir' => __DIR__,
             'kernel.root_dir'=>'.',
             'kernel.logs_dir'=>'.'
         ];
