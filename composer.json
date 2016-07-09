@@ -24,4 +24,10 @@
     "autoload": {
         "psr-4": {"Monolog\\Configuration\\": "source/"}
     }
+    "scripts": {
+        "test": [
+            "parallel-lint . --exclude vendor",
+            "phpunit"
+        ]
+    }
 }
