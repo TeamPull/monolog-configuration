@@ -8,7 +8,6 @@ configuration support for the php logger library monolog
 - request write access (yes you will get it) 
 - create gitter chat
 - setup bounty program https://www.bountysource.com/
-- write documentation (github wiki)
-- move stuff from https://github.com/keywan-ghadami-oxid/oxideshop_ce/blob/feature/psr3_logger_interface/source/Core/MonologFactory.php into this repository 
-- make composer intergration working
-- use it/ wirte bug tickets
+- write documentation (github wiki) 
+- use it/ write bug tickets
+
