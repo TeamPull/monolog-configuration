@@ -1,4 +1,4 @@
-<?php
+The<?php
 namespace Monolog\Configuration;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
@@ -22,9 +22,9 @@ class MonologFactory
 
     protected function loadMonologConfig()
     {       
-        $path = $this->vars['kernel.root_dir'] . '/../monolog.yaml';
+        $path = $this->vars['monolog_config_dir'] . '/monolog.yaml';
         if(!file_exists($path)){
-            $path = $this->vars['kernel.root_dir'] . '/../monolog.dist.yaml';
+            $path = $this->vars['monolog_config_dir'] . '/monolog.dist.yaml';
         }
         //Do not try catch parse erors because the system should
         // not continue to work until the configuration is fixed
