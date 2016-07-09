@@ -10,8 +10,8 @@ matrix:
         #- php: 7
         #- php: hhvm
     fast_finish: true
-
-before_script:
+before_script: 
+  - phpenv config-rm xdebug.ini
   - if [ "$deps" == "low" ]; then composer update --prefer-source --prefer-lowest --prefer-stable; fi
   - if [ "$deps" != "low" ]; then composer install --prefer-source; fi
 
