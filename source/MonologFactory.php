@@ -152,3 +152,4 @@ class MonologFactory implements LoggerFactoryInterface
         $rc = new ReflectionClass($class);
         $handler = $rc->newInstanceArgs($args);
     }
+ }
