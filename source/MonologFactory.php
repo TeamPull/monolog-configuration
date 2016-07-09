@@ -9,18 +9,19 @@ use Symfony\Component\Yaml\Yaml;
 /**
  * Class LoggerFactory
  */
-class MonologFactory implements LoggerFactoryInterface
+class MonologFactory
 {
     protected $vars;
 
     function __construct($vars){
         $this->vars = $vars;
+        $this->loadMonologConfig();
     }
 
     protected $monologConfig;
+
     protected function loadMonologConfig()
-    {
-        
+    {       
         $path = $this->vars['kernel.root_dir'] . '../monolog.yaml';
         if(!file_exists($path)){
             $path = $this->vars['kernel.root_dir'] . '../monolog.dist.yaml';
@@ -29,6 +30,7 @@ class MonologFactory implements LoggerFactoryInterface
         // not continue to work until the configuration is fixed
         $this->monologConfig = Yaml::parse(file_get_contents($path));
     }
+
     /**
      * creates a logger object
      * this method should be called only once during a request
@@ -40,11 +42,7 @@ class MonologFactory implements LoggerFactoryInterface
      * @return Logger
      *      
      */
-    public function getLogger($name = 'default'){
-        
-        
-        $this->loadMonologConfig();
-        
+    public function getLogger($name = 'default'){        
         $channelConfig = $this->monologConfig['channels'][$name];
         
         if (array_key_exists('extends',$channelConfig)){
@@ -86,7 +84,7 @@ class MonologFactory implements LoggerFactoryInterface
         return $log;
     }
     
-    public function getNamedComponent($componentType,&$componentConfig){
+    protected function getNamedComponent($componentType,&$componentConfig){
         if(!is_array($componentConfig)){
              $componentConfig = $this->monologConfig[componentType][$componentConfig];
         }               
