@@ -1,4 +1,4 @@
-The<?php
+<?php
 namespace Monolog\Configuration;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
