@@ -123,6 +123,9 @@ class MonologFactory
     {
         $this->getNamedComponent('processors', $processorConfig);
         $class = $processorConfig['class'];
+        if (strpos('\\',$class)===false){
+            $class = '\\Monolog\\Processor\\' . $class;
+        }
         $args = array_key_exists('arguments', $processorConfig) ? $processorConfig['arguments'] : [];
         $rc = new \ReflectionClass($class);
         $p = $rc->newInstanceArgs($args);
