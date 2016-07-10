@@ -1,8 +1,8 @@
 language: php
 
-cache: 
+#cache: 
     #composer: true
-    directories: - $HOME/.composer/cache
+    #directories: - $HOME/.composer/cache
 matrix:
     include:
         #- php: 5.4
