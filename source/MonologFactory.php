@@ -112,7 +112,7 @@ class MonologFactory
             $this->channel . ': '. $message
             . ' config:'
             . print_r($this->monologConfig,true)
-        )
+        );
     }
 
 
