@@ -89,6 +89,7 @@ class MonologFactory
     protected function componentBuilder($componentKey,$getter,$pusher){
         $components = $this->channelConfig[$componentKey];
         if(is_array($components)){
+           $this->throwError(print_r($components,true));
            foreach($components as $componentConfig){               
               $component = call_user_func($getter, $componentConfig);
               call_user_func($pusher, $component);
