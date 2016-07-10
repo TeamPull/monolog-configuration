@@ -126,7 +126,7 @@ class MonologFactory
     public function getHandler($handlerConfig)
     {
         $this->getNamedComponent('handlers',$handlerConfig); 
-        $type = array_key_exists('type',$handlerConfig) ? $handlerConfig['type'] : false;
+        $type = array_key_exists('type',$handlerConfig) ? ucfirst(strtolower($handlerConfig['type'])) : false;
         $levels = Logger::getLevels();
         $level =  array_key_exists('level',$handlerConfig) ? $levels[strtoupper($handlerConfig['level'])] : Logger::INFO;
         $bubble = array_key_exists('bubble',$handlerConfig) ? $handlerConfig['bubble'] : true;
