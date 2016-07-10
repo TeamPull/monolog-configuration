@@ -99,7 +99,7 @@ class MonologFactory
         }               
     }
 
-    protected throwError($message){
+    protected function throwError($message){
         throw new MonologConfigurationError($message);
     }
 
