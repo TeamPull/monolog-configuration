@@ -94,7 +94,7 @@ class MonologFactory
               $pusher($component);
            }
         }
-    };
+    }
 
     protected function getNamedComponent($componentType,&$componentConfig){
         if(!is_array($componentConfig)){
