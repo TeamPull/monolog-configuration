@@ -121,9 +121,9 @@ class MonologFactory
      */
     public function getProcessor($processorConfig)
     {
-        $this->getNamedComponent('processors',$processorConfig);
+        $this->getNamedComponent('processors', $processorConfig);
         $class = $processorConfig['class'];
-        $args = $processorConfig['arguments'];
+        $args = array_key_exists('arguments', $processorConfig) ? $processorConfig['arguments'] : [];
         $rc = new \ReflectionClass($class);
         $p = $rc->newInstanceArgs($args);
         return $p;
