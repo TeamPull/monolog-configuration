@@ -20,7 +20,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "~4.5",
-        "jakub-onderka/php-parallel-lint": "0.9"
+        "jakub-onderka/php-parallel-lint": "0.9",
+        "sebastian/phpcpd": "^2.0"
     },
     "autoload": {
         "psr-4": {"Monolog\\Configuration\\": "source/"}
