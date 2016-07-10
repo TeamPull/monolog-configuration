@@ -89,7 +89,7 @@ class MonologFactory
     
     protected function getNamedComponent($componentType,&$componentConfig){
         if(!is_array($componentConfig)){
-             $componentConfig = $this->monologConfig[componentType][$componentConfig];
+             $componentConfig = $this->monologConfig[$componentType][$componentConfig];
         }               
     }
 
