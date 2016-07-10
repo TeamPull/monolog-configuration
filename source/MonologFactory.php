@@ -143,7 +143,7 @@ class MonologFactory
             * adds constructor argument for the new handler
             * @return boolean true if the argument was configured and added
             **/
-            $addParameter = function($name,$default) use (&$args,$handlerConfig){
+            $addParameter = function($name,$default = null) use (&$args,$handlerConfig){
                 if (array_key_exists($name,$handlerConfig)) {
                     $args[] = $handlerConfig[$name];
                     return true;
