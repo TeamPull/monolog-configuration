@@ -93,7 +93,7 @@ class MonologFactory
              $componentName = $componentConfig;
              $componentConfigSection = $this->monologConfig[$componentType];
              if (!array_key_exists($componentName,$componentConfigSection)){
-                 this->throwError("$componentType - $componentName was refered in monolog configuration but was not defined");
+                 $this->throwError("$componentType - $componentName was refered in monolog configuration but was not defined");
              }
              $componentConfig = $componentConfigSection[$componentName];
         }               
