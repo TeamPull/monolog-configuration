@@ -23,6 +23,7 @@ class MonologFactory
     }
 
     protected $monologConfig;
+    protected $channel;
 
     protected function loadMonologConfig()
     {       
@@ -46,12 +47,14 @@ class MonologFactory
      * @return Logger
      *      
      */
-    public function getLogger($name = 'default'){        
+    public function getLogger($name = 'default'){
+        $this->channel=$name;
         $channelConfig = $this->monologConfig['channels'][$name];
         
         if (array_key_exists('extends',$channelConfig)){
             // extend logger
             $log = $this->getLogger($channelConfig['extends']);
+            $this->channel=$name;
             $log = $log->withName($name);
         } else {
             // create logger
@@ -100,7 +103,7 @@ class MonologFactory
     }
 
     protected function throwError($message){
-        throw new MonologConfigurationError($message);
+        throw new MonologConfigurationError($this->channel . ': '. $message);
     }
 
 
