@@ -174,7 +174,7 @@ class MonologFactory
         } else {
             $this->throwError('no type and no class given for handler');
         }
-        $rc = new ReflectionClass($class);
+        $rc = new \ReflectionClass($class);
         $handler = $rc->newInstanceArgs($args);
     }
  }
