@@ -7,7 +7,10 @@ use Monolog\Processor\PsrLogMessageProcessor;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Class LoggerFactory
+ * Class MonologFactory
+ * responsible for creating a monlog instance
+ * it reads the configuration file monolog.yaml
+ * and configures the instance accordingly.
  */
 class MonologFactory
 {
