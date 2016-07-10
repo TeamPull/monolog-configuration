@@ -126,7 +126,7 @@ class MonologFactory
     public function getHandler($handlerConfig)
     {
         $this->getNamedComponent('handlers',$handlerConfig); 
-        $type = $handlerConfig['type'];
+        $type = array_key_exists('type',$handlerConfig) ? $handlerConfig['type'] : false;
         $levels = Logger::getLevels();
         $level =  array_key_exists('level',$handlerConfig) ? $levels[strtoupper($handlerConfig['level'])] : Logger:INFO;
         $bubble = array_key_exists('bubble',$handlerConfig) ? $handlerConfig['bubble'] : true;
@@ -168,9 +168,11 @@ class MonologFactory
             if ($type == 'stream' ) {
                 $addParameter('file');
             }
-        } else {
+        } elseif(array_key_exists('class',$handlerConfig)) {
             $class = $handlerConfig['class'];
             $args = $handlerConfig['arguments'];
+        } else {
+            $this->throwError('no type and no class given for handler');
         }
         $rc = new ReflectionClass($class);
         $handler = $rc->newInstanceArgs($args);
