@@ -2,17 +2,18 @@ language: php
 
 cache: 
     composer: true
+    directories: - $HOME/.composer/cache
 matrix:
     include:
         #- php: 5.4
         #- php: 5.5
         - php: 5.6
-        #- php: 7
-        #- php: hhvm
+        - php: 7
+        - php: hhvm
     fast_finish: true
 before_script: 
   - phpenv config-rm xdebug.ini
-  - if [ "$deps" == "low" ]; then composer update --prefer-source --prefer-lowest --prefer-stable; fi
-  - if [ "$deps" != "low" ]; then composer install --prefer-source; fi
+  - if [ "$deps" == "low" ]; then composer update --prefer-dist --prefer-lowest --no-interaction --prefer-stable; fi
+  - if [ "$deps" != "low" ]; then composer install --prefer-dist --no-interaction; fi
 
 script: composer test
