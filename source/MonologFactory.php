@@ -121,8 +121,17 @@ class MonologFactory
     public function getProcessor($processorConfig)
     {
         $this->getNamedComponent('processors',$processorConfig);
+        $class = $processorConfig['class'];
+        $args = $processorConfig['arguments'];
+        $rc = new \ReflectionClass($class);
+        $p = $rc->newInstanceArgs($args);
+        return $p;
     }
 
+    /**
+     * @param $handlerConfig array
+     * @return \Monolog\Handler
+     */
     public function getHandler($handlerConfig)
     {
         $this->getNamedComponent('handlers',$handlerConfig); 
