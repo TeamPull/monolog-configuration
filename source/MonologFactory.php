@@ -90,7 +90,7 @@ class MonologFactory
         if(is_array($components)){          
            foreach($components as $componentConfig){                     
               $component = $getter($componentConfig);
-              if($component == null){$this->throwError("$componentKey was not created")}
+              if($component == null){$this->throwError("$componentKey was not created");}
               $pusher($component);
            }
         }
