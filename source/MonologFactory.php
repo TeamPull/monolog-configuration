@@ -110,7 +110,7 @@ class MonologFactory
     protected function throwError($message){
         throw new MonologConfigurationError($this->channel . ': '. $message
         . 'config:'
-        . var_dump($this->monologConfig,true);
+        . var_dump($this->monologConfig,true)
     }
 
 
