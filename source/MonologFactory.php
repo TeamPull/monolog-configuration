@@ -52,9 +52,9 @@ class MonologFactory
         $this->channel=$name;
         $this->channelConfig = $this->monologConfig['channels'][$name];
         
-        if (array_key_exists('extends',$channelConfig)){
+        if (array_key_exists('extends',$this->channelConfig)){
             // extend logger
-            $log = $this->getLogger($channelConfig['extends']);
+            $log = $this->getLogger($this->channelConfig['extends']);
             $this->channel=$name;
             $this->channelConfig = $this->monologConfig['channels'][$name];
             $log = $log->withName($name);
@@ -62,8 +62,8 @@ class MonologFactory
             // create logger
             $log = new Logger($name);
         }
-        if (array_key_exists('use_microseconds',$channelConfig)){
-            $log->useMicrosecondTimestamps($channelConfig['use_microseconds']);
+        if (array_key_exists('use_microseconds',$this->channelConfig)){
+            $log->useMicrosecondTimestamps($this->channelConfig['use_microseconds']);
         }
         if ($this->channelConfig['register_php_handlers']) {
             ErrorHandler::register($log);
