@@ -89,7 +89,12 @@ class MonologFactory
     
     protected function getNamedComponent($componentType,&$componentConfig){
         if(!is_array($componentConfig)){
-             $componentConfig = $this->monologConfig[$componentType][$componentConfig];
+             $componentName = $componentConfig;
+             $componentConfigSection = $this->monologConfig[$componentType];
+             if (!array_key_exists($componentName,$componentConfigSection)){
+                 throw new Exception("$componentType - $componentName was refered in monolog configuration but was not defined");
+             }
+             $componentConfig = $componentConfigSection[$componentName];
         }               
     }
 
