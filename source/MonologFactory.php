@@ -176,5 +176,6 @@ class MonologFactory
         }
         $rc = new \ReflectionClass($class);
         $handler = $rc->newInstanceArgs($args);
+        return $handler;
     }
  }
