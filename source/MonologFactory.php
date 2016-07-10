@@ -24,6 +24,7 @@ class MonologFactory
 
     protected $monologConfig;
     protected $channel;
+    protected $channelConfig;
 
     protected function loadMonologConfig()
     {       
@@ -49,12 +50,13 @@ class MonologFactory
      */
     public function getLogger($name = 'default'){
         $this->channel=$name;
-        $channelConfig = $this->monologConfig['channels'][$name];
+        $this->channelConfig = $this->monologConfig['channels'][$name];
         
         if (array_key_exists('extends',$channelConfig)){
             // extend logger
             $log = $this->getLogger($channelConfig['extends']);
             $this->channel=$name;
+            $this->channelConfig = $this->monologConfig['channels'][$name];
             $log = $log->withName($name);
         } else {
             // create logger
@@ -63,34 +65,37 @@ class MonologFactory
         if (array_key_exists('use_microseconds',$channelConfig)){
             $log->useMicrosecondTimestamps($channelConfig['use_microseconds']);
         }
-        if ($channelConfig['register_php_handlers']) {
+        if ($this->channelConfig['register_php_handlers']) {
             ErrorHandler::register($log);
         }
 
-        /**
-         * Gets a components (handler,processor) from the configuration
-         */
-        $componentBuilder = function($componentKey,$getter,$pusher) use ($channelConfig) {
-            $components = $channelConfig[$componentKey];
-            if(is_array($components)){
-               foreach($components as $componentConfig){               
-                  $component = $getter($componentConfig);
-                  $pusher($component);
-               }
-            }
-        };
+        
 
-        $componentBuilder('handlers',
+        $this->componentBuilder(
+            'handlers',
             [$this,'getHandler'],
             [$log,'pushHandler']
             );
-        $componentBuilder('processors',
+        $this->componentBuilder(
+            'processors',
             [$this,'getProcessor'],
             [$log,'pushProcessor']
             );
         return $log;
     }
-    
+    /**
+     * Gets a components (handler,processor) from the configuration
+     */
+    protected function componentBuilder($componentKey,$getter,$pusher){
+        $components = $this->channelConfig[$componentKey];
+        if(is_array($components)){
+           foreach($components as $componentConfig){               
+              $component = $getter($componentConfig);
+              $pusher($component);
+           }
+        }
+    };
+
     protected function getNamedComponent($componentType,&$componentConfig){
         if(!is_array($componentConfig)){
              $componentName = $componentConfig;
@@ -103,7 +108,9 @@ class MonologFactory
     }
 
     protected function throwError($message){
-        throw new MonologConfigurationError($this->channel . ': '. $message);
+        throw new MonologConfigurationError($this->channel . ': '. $message
+        . 'config:'
+        . var_dump($this->monologConfig,true);
     }
 
 
