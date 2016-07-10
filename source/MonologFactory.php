@@ -135,7 +135,7 @@ class MonologFactory
             $class = '\\Monolog\\Handler\\' . $type . 'Handler';
             $type = strtolower($type);
             
-            if ($handlerConfig['handler']) {
+            if (array_key_exists('handler',$handlerConfig)) {
                 $parentHandler = $this->getHandler($handlerConfig['handler']);
             }
             
