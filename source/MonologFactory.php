@@ -90,8 +90,8 @@ class MonologFactory
         $components = $this->channelConfig[$componentKey];
         if(is_array($components)){
            foreach($components as $componentConfig){               
-              $component = $getter($componentConfig);
-              $pusher($component);
+              $component = call_user_func($getter, $componentConfig);
+              call_user_func($pusher, $component);
            }
         }
     }
