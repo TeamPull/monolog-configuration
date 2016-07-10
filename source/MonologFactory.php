@@ -15,6 +15,7 @@ use Symfony\Component\Yaml\Yaml;
 class MonologFactory
 {
     protected $vars;
+    
 
     function __construct($vars){
         $this->vars = $vars;
@@ -92,11 +93,16 @@ class MonologFactory
              $componentName = $componentConfig;
              $componentConfigSection = $this->monologConfig[$componentType];
              if (!array_key_exists($componentName,$componentConfigSection)){
-                 throw new Exception("$componentType - $componentName was refered in monolog configuration but was not defined");
+                 this->throwError("$componentType - $componentName was refered in monolog configuration but was not defined");
              }
              $componentConfig = $componentConfigSection[$componentName];
         }               
     }
+
+    protected throwError($message){
+        throw new MonologConfigurationError($message);
+    }
+
 
     /**
      * @return callable
