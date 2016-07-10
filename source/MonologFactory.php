@@ -128,8 +128,8 @@ class MonologFactory
         $this->getNamedComponent('handlers',$handlerConfig); 
         $type = $handlerConfig['type'];
         $levels = Logger::getLevels();
-        $level =  $levels[strtoupper($handlerConfig['level'])];
-        $bubble = $handlerConfig['bubble'];
+        $level =  array_key_exists('level',$handlerConfig) ? $levels[strtoupper($handlerConfig['level'])] : Logger:INFO;
+        $bubble = array_key_exists('bubble',$handlerConfig) ? $handlerConfig['bubble'] : true;
         $args = [];
         if ($type) {            
             $class = '\\Monolog\\Handler\\' . $type . 'Handler';
