@@ -16,7 +16,6 @@ class MonologFactory
 {
     protected $vars;
     
-
     function __construct($vars){
         $this->vars = $vars;
         $this->loadMonologConfig();
@@ -86,18 +85,17 @@ class MonologFactory
     /**
      * Gets a components (handler,processor) from the configuration
      */
-    protected function componentBuilder($componentKey,$getter,$pusher){
+    protected function componentBuilder($componentKey,callable $getter,callable $pusher){
         $components = $this->channelConfig[$componentKey];
         if(is_array($components)){          
            foreach($components as $componentConfig){                     
-              $component = call_user_func($getter, $componentConfig);
-              call_user_func($pusher, $component);
+              $component = $getter($componentConfig);
+              $pusher($component);
            }
         }
     }
 
-    protected function getNamedComponent($componentType,&$componentConfig){
-        $this->throwError(print_r($componentConfig,true));
+    protected function getNamedComponent($componentType,&$componentConfig){        
         if(!is_array($componentConfig)){
              $componentName = $componentConfig;
              $componentConfigSection = $this->monologConfig[$componentType];
@@ -127,7 +125,7 @@ class MonologFactory
 
     public function getHandler($handlerConfig)
     {
-        $this->getNamedComponent('handlers',$processorConfig); 
+        $this->getNamedComponent('handlers',$handlerConfig); 
         $type = $handlerConfig['type'];
         $levels = Logger::getLevels();
         $level =  $levels[strtoupper($handlerConfig['level'])];
