@@ -66,8 +66,8 @@ class MonologFactory
         /**
          * Gets a components (handler,processor) from the configuration
          */
-        $componentBuilder = function($component,$getter,$pusher){
-            $components = $channelConfig["${component}s"];
+        $componentBuilder = function($componentKey,$getter,$pusher) use ($channelConfig) {
+            $components = $channelConfig[$componentKey];
             if(is_array($components)){
                foreach($components as $componentConfig){               
                   $component = $getter($componentConfig);
@@ -76,11 +76,11 @@ class MonologFactory
             }
         };
 
-        $componentBuilder('handler',
+        $componentBuilder('handlers',
             [$this,'getHandler'],
             [$log,'pushHandler']
             );
-        $componentBuilder('processor',
+        $componentBuilder('processors',
             [$this,'getProcessor'],
             [$log,'pushProcessor']
             );
