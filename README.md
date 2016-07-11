@@ -23,8 +23,9 @@ https://github.com/keywan-ghadami-oxid/monolog-configuration/wiki
 - add support for more/all handlers and processors
 - maybe setup bounty program https://www.bountysource.com/
 - make some example integrations for frameworks not having a monolog configuration
-  - SILEX does not yet have yaml configuration
-  - Laravel 4 & 5  does not yet have yaml configuration
+  - SILEX 
+  - Laravel 4 & 5  
+  - FuelPHP 
   - frameworks already having a some builtin configuration support
     - symfony already has the monolog bundle
     - dupral already has a own impl.
