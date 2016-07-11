@@ -189,6 +189,7 @@ class MonologFactory
         }
         $rc = new \ReflectionClass($class);
         $handler = $rc->newInstanceArgs($args);
+        $handler->setBubble($bubble);
         return $handler;
     }
  }
