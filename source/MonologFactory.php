@@ -178,6 +178,9 @@ class MonologFactory
             if ($type == 'couchdb' ) {
                 $args[] = $handlerConfig;
             }
+            
+
+
             if ($type == 'stream' ) {
                 $addParameter('file');
             }
@@ -187,10 +190,15 @@ class MonologFactory
         } else {
             $this->throwError('no type and no class given for handler');
         }
+
         $rc = new \ReflectionClass($class);
         $handler = $rc->newInstanceArgs($args);
         $handler->setBubble($bubble);
         $handler->setLevel($level);
+
+        if ($handler instanceof \Monolog\Handler\RotatingFileHandler) {
+           
+        }
         return $handler;
     }
  }
