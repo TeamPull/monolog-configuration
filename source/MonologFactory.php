@@ -141,7 +141,7 @@ class MonologFactory
         return $default;
     }
 
-    protected setComponentParameter function($name,callable $c,$default=null){
+    protected function setComponentParameter($name,callable $c,$default=null){
         $value = $this->getParameter($name,$default);
         if($value!==null){
             $c($value);
