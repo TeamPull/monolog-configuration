@@ -134,7 +134,7 @@ class MonologFactory
         return $p;
     }
     
-    potected function getParameter($name, $default=null){
+    protected function getParameter($name, $default=null){
         if (array_key_exists($name,$this->componentConfig)) {
             return $this->componentConfig[$name];        
         }
