@@ -209,9 +209,14 @@ class MonologFactory
             if ($type == 'couchdb' ) {
                 $args[] = $handlerConfig;
             }
-            
-
-
+            if ($type == 'cube' ) {
+                $addParameter('url');       
+            }
+            if ($type == 'deduplication' ) {
+                $args[] = $parentHandler;
+                $addParameter('deduplicationStore');
+                 //deduplicationLevel 
+            }
             if ($type == 'stream' || type == 'RotatingFile') {
                 $addParameter('file');
                 if($type == 'RotatingFile') {
