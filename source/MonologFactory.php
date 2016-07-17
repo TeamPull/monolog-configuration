@@ -131,7 +131,13 @@ class MonologFactory
         $p = $rc->newInstanceArgs($args);
         return $p;
     }
-
+    
+    public function getParameter($name, $handlerConfig, $default=null){
+        if (array_key_exists($name,$handlerConfig)) {
+            return $handlerConfig[$name];        
+        }
+        return $default;
+    }
     /**
      * @param $handlerConfig array
      * @return \Monolog\Handler
@@ -146,6 +152,8 @@ class MonologFactory
         $args = [];
         if ($type) {            
             $class = '\\Monolog\\Handler\\' . $type . 'Handler';
+        }
+        if ($type) { 
             $type = strtolower($type);
             
             if (array_key_exists('handler',$handlerConfig)) {
@@ -197,7 +205,7 @@ class MonologFactory
         $handler->setLevel($level);
 
         if ($handler instanceof \Monolog\Handler\RotatingFileHandler) {
-           
+            $this->getParameter('FilenameFormat', $handlerConfig);
         }
         return $handler;
     }
