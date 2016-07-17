@@ -50,6 +50,9 @@ class MonologFactory
      */
     public function getLogger($name = 'default'){
         $this->channel=$name;
+        if (!array_key_exists($name,$this->monologConfig)){
+            return new \Psr\Log\NullLogger();
+        }
         $this->channelConfig = $this->monologConfig['channels'][$name];
         
         if (array_key_exists('extends',$this->channelConfig)){
