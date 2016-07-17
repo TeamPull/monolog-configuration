@@ -13,6 +13,6 @@ class MonologFactoryTest extends \PHPUnit_Framework_TestCase
         $lf = new MonologFactory($vars);
         $log = $lf->getLogger();
         $this->assertNotNull($log);
-        $this->assertInstanceOf('Monolog\\Logger',$log);
+        $this->assertInstanceOf('Psr\\Log\\LoggerInterface',$log);
     }
 }
