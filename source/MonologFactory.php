@@ -194,9 +194,7 @@ class MonologFactory
                     $args[] = $handlerConfig[$name];
                     return true;
                 }
-                if ($default !== null ){
-                    $args[] = $default;
-                }
+                $args[] = $default;               
                 return false;
             };
             if ($type == 'buffer' ) {
@@ -216,6 +214,13 @@ class MonologFactory
 
             if ($type == 'stream' || type == 'RotatingFile') {
                 $addParameter('file');
+                if($type == 'RotatingFile') {
+                    $addParameter('maxFiles',0);
+                }
+                $args[] = $level;
+                $args[] = $bubble;
+                $addParameter('filePermission');
+                $addParameter('useLocking');                
             }
         } 
                             
