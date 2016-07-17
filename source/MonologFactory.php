@@ -163,15 +163,26 @@ class MonologFactory
         $levels = Logger::getLevels();
         $level =  array_key_exists('level',$handlerConfig) ? $levels[strtoupper($handlerConfig['level'])] : Logger::INFO;
         $bubble = array_key_exists('bubble',$handlerConfig) ? $handlerConfig['bubble'] : true;
-        $args = [];
+       
         if ($type) {            
             $class = '\\Monolog\\Handler\\' . $type . 'Handler';
         }
-        if ($type) { 
+                
+        $class = $this->getParameter('class', $class);      
+        
+        if ($class==null){
+            $this->throwError('no type and no class given for handler');
+        }
+        
+        $rc = new \ReflectionClass($class);
+
+        $args = [];
+        $args = $this->getParameter('arguments');
+        if ($args==null) { 
             $type = strtolower($type);
-            
-            if (array_key_exists('handler',$handlerConfig)) {
-                $parentHandler = $this->getHandler($handlerConfig['handler']);
+            $parentHandler = $this->getParameter('handler');
+            if ($parentHandler) {
+                $parentHandler = $this->getHandler($parentHandler);
             }
             
             /**
@@ -206,14 +217,8 @@ class MonologFactory
             if ($type == 'stream' || type == 'RotatingFile') {
                 $addParameter('file');
             }
-        } elseif(array_key_exists('class',$handlerConfig)) {
-            $class = $handlerConfig['class'];
-            $args = $handlerConfig['arguments'];
-        } else {
-            $this->throwError('no type and no class given for handler');
-        }
-
-        $rc = new \ReflectionClass($class);
+        } 
+                            
         $handler = $rc->newInstanceArgs($args);
         $handler->setBubble($bubble);
         $handler->setLevel($level);
