@@ -24,6 +24,7 @@ class MonologFactory
     protected $monologConfig;
     protected $channel;
     protected $channelConfig;
+    protected $componentConfig;
 
     protected function loadMonologConfig()
     {       
@@ -88,7 +89,8 @@ class MonologFactory
     protected function componentBuilder($componentKey,callable $getter,callable $pusher){
         $components = $this->channelConfig[$componentKey];
         if(is_array($components)){          
-           foreach($components as $componentConfig){                     
+           foreach($components as $componentConfig){
+              $this->componentConfig = $componentConfig;                 
               $component = $getter($componentConfig);
               if($component == null){$this->throwError("$componentKey was not created");}
               $pusher($component);
@@ -132,11 +134,20 @@ class MonologFactory
         return $p;
     }
     
-    public function getParameter($name, $handlerConfig, $default=null){
-        if (array_key_exists($name,$handlerConfig)) {
-            return $handlerConfig[$name];        
+    potected function getParameter($name, $default=null){
+        if (array_key_exists($name,$this->componentConfig)) {
+            return $this->componentConfig[$name];        
         }
         return $default;
+    }
+
+    protected setComponentParameter function($name,callable $c,$default=null){
+        $value = $this->getParameter($name,$default);
+        if($value!==null){
+            $c($value);
+            return true;
+        }
+        retrun false;
     }
     /**
      * @param $handlerConfig array
@@ -189,7 +200,7 @@ class MonologFactory
             
 
 
-            if ($type == 'stream' ) {
+            if ($type == 'stream' || type == 'RotatingFile') {
                 $addParameter('file');
             }
         } elseif(array_key_exists('class',$handlerConfig)) {
@@ -205,7 +216,11 @@ class MonologFactory
         $handler->setLevel($level);
 
         if ($handler instanceof \Monolog\Handler\RotatingFileHandler) {
-            $this->getParameter('FilenameFormat', $handlerConfig);
+            $dateFormat = $this->getParameter('dateFormat','Y-m-d');
+            $filenameFormat = $this->getParameter('FilenameFormat');
+            if($fileFormat != null){
+                $handler->setFilenameFormat($filenameFormat);
+            }
         }
         return $handler;
     }
