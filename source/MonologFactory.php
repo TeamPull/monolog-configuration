@@ -147,7 +147,7 @@ class MonologFactory
             $c($value);
             return true;
         }
-        retrun false;
+        return false;
     }
     /**
      * @param $handlerConfig array
