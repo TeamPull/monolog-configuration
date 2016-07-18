@@ -215,7 +215,8 @@ class MonologFactory
             if ($type == 'deduplication' ) {
                 $args[] = $parentHandler;
                 $addParameter('deduplicationStore');
-                 //deduplicationLevel 
+                $deduplicationLevel = $this->getParameter('deduplicationLevel','debug');
+                $args[] = $deduplicationLevel  ? $levels[strtoupper($deduplicationLevel )] : Logger::DEBUG;
             }
             if ($type == 'stream' || type == 'RotatingFile') {
                 $addParameter('file');
