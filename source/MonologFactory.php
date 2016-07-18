@@ -178,7 +178,7 @@ class MonologFactory
 
         $args = [];
         $args = $this->getParameter('arguments');
-        if ($args==null) { 
+        if ($args==null) {           
             $type = strtolower($type);
             $parentHandler = $this->getParameter('handler');
             if ($parentHandler) {
@@ -197,6 +197,14 @@ class MonologFactory
                 $args[] = $default;               
                 return false;
             };
+
+            $constructor = $rc->getConstructor();
+            $parameters = $constructor->getParameters();
+            
+            foreach($parameters as $parameter){
+           
+            }
+
             if ($type == 'buffer' ) {
                 if ($parentHandler){
                     $args[] = $parentHandler;
