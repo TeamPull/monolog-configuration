@@ -150,7 +150,7 @@ class MonologFactory
             $arg = $this->getHandler($arg);
         } elseif ($name == 'level' || $name == 'deduplicationLevel'){
             $levels = Logger::getLevels();
-            $level = $arg ? $levels[strtoupper($arg)] : null
+            $level = $arg ? $levels[strtoupper($arg)] : null;
         }
         return $arg;
     }
