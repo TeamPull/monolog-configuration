@@ -144,6 +144,17 @@ class MonologFactory
         return $default;
     }
 
+    protected function getArg($name){
+        $arg = $this->getParameter($name);
+        if($name == 'handler'){
+            $arg = $this->getHandler($arg);
+        } elseif ($name == 'level' || $name == 'deduplicationLevel'){
+            $levels = Logger::getLevels();
+            $level = $arg ? $levels[strtoupper($arg)] : null
+        }
+        return $arg;
+    }
+
     protected function setComponentParameter($name,callable $c,$default=null){
         $value = $this->getParameter($name,$default);
         if($value!==null){
@@ -161,8 +172,9 @@ class MonologFactory
         $this->getNamedComponent('handlers',$handlerConfig); 
         $type = array_key_exists('type',$handlerConfig) ? ucfirst(strtolower($handlerConfig['type'])) : false;
         $levels = Logger::getLevels();
-        $level =  array_key_exists('level',$handlerConfig) ? $levels[strtoupper($handlerConfig['level'])] : Logger::INFO;
-        $bubble = array_key_exists('bubble',$handlerConfig) ? $handlerConfig['bubble'] : true;
+        $level = $this->getParameter('level',info);       
+        $level = $levels[strtoupper($level)];
+        $bubble = (bool) $this->getParameter('bubble');
        
         if ($type) {            
             $class = '\\Monolog\\Handler\\' . $type . 'Handler';
@@ -170,7 +182,7 @@ class MonologFactory
                 
         $class = $this->getParameter('class', $class);      
         
-        if ($class==null){
+        if ($class == null){
             $this->throwError('no type and no class given for handler');
         }
         
@@ -180,62 +192,22 @@ class MonologFactory
         $args = $this->getParameter('arguments');
         if ($args==null) {           
             $type = strtolower($type);
-            $parentHandler = $this->getParameter('handler');
-            if ($parentHandler) {
-                $parentHandler = $this->getHandler($parentHandler);
-            }
-            
-            /**
-            * adds constructor argument for the new handler
-            * @return boolean true if the argument was configured and added
-            **/
-            $addParameter = function($name,$default = null) use (&$args,$handlerConfig){
-                if (array_key_exists($name,$handlerConfig)) {
-                    $args[] = $handlerConfig[$name];
-                    return true;
-                }
-                $args[] = $default;               
-                return false;
-            };
-
+                      
             $constructor = $rc->getConstructor();
             $parameters = $constructor->getParameters();
             
             foreach($parameters as $parameter){
-           
-            }
-
-            if ($type == 'buffer' ) {
-                if ($parentHandler){
-                    $args[] = $parentHandler;
-                    $addParameter('bufferLimit',0);
-                    $args[] = $level;
-                    $args[] = $bubble;
-                    $addParameter('flushOnOverflow');
+                $arg = $this->getArg($parameter->name);
+                if ($arg === null){
+                    break;
                 }
+                $args[] = $arg;
             }
+            
             if ($type == 'couchdb' ) {
-                $args[] = $handlerConfig;
-            }
-            if ($type == 'cube' ) {
-                $addParameter('url');       
-            }
-            if ($type == 'deduplication' ) {
-                $args[] = $parentHandler;
-                $addParameter('deduplicationStore');
-                $deduplicationLevel = $this->getParameter('deduplicationLevel','debug');
-                $args[] = $deduplicationLevel  ? $levels[strtoupper($deduplicationLevel )] : Logger::DEBUG;
-            }
-            if ($type == 'stream' || type == 'RotatingFile') {
-                $addParameter('file');
-                if($type == 'RotatingFile') {
-                    $addParameter('maxFiles',0);
-                }
-                $args[] = $level;
-                $args[] = $bubble;
-                $addParameter('filePermission');
-                $addParameter('useLocking');                
-            }
+                $args[0] = $handlerConfig;
+            }          
+                                                   
         } 
                             
         $handler = $rc->newInstanceArgs($args);
