@@ -18,7 +18,7 @@ class MonologFactory
     
     function __construct($vars){
         $this->vars = $vars;
-        $this->loadMonologConfig();
+        $this->monologConfig = $this->loadMonologConfig($vars);
     }
 
     protected $monologConfig;
@@ -26,15 +26,16 @@ class MonologFactory
     protected $channelConfig;
     protected $componentConfig;
 
-    protected function loadMonologConfig()
+    protected $loggerRegistry = [];
+    protected function loadMonologConfig($vars)
     {       
-        $path = $this->vars['monolog_config_dir'] . '/monolog.yaml';
+        $path = $vars['monolog_config_dir'] . '/monolog.yaml';
         if(!file_exists($path)){
-            $path = $this->vars['monolog_config_dir'] . '/monolog.dist.yaml';
+            $path = $vars['monolog_config_dir'] . '/monolog.dist.yaml';
         }
         //Do not try catch parse erors because the system should
         // not continue to work until the configuration is fixed
-        $this->monologConfig = Yaml::parse(file_get_contents($path));
+        return Yaml::parse(file_get_contents($path));
     }
 
     /**
@@ -49,15 +50,26 @@ class MonologFactory
      *      
      */
     public function getLogger($name = 'default'){
+        if ($this->loggerRegistry[$name]){
+            return $this->loggerRegistry[$name];
+        }
+        $this->loggerRegistry[$name] = 'building';
         $this->channel=$name;
-        if (!array_key_exists($name,$this->monologConfig)){
-            return new \Psr\Log\NullLogger();
+        if (! array_key_exists($name,$this->monologConfig['channels']){
+            if($name == 'default'){
+                $this->throwError('default channel must be defined');
+            }
+            $this->monologConfig['channels'][$name] = ['extends'=> 'default'];
         }
         $this->channelConfig = $this->monologConfig['channels'][$name];
         
         if (array_key_exists('extends',$this->channelConfig)){
+            
             // extend logger
             $log = $this->getLogger($this->channelConfig['extends']);
+            if ($log === 'building'){
+                 $this->throwError('cycle dependency of loggers);
+            }
             $this->channel=$name;
             $this->channelConfig = $this->monologConfig['channels'][$name];
             $log = $log->withName($name);
@@ -70,9 +82,7 @@ class MonologFactory
         }
         if (array_key_exists('register_php_handlers',$this->channelConfig) && $this->channelConfig['register_php_handlers']) {
             ErrorHandler::register($log);
-        }
-
-        
+        }       
 
         $this->componentBuilder(
             'handlers',
@@ -84,6 +94,7 @@ class MonologFactory
             [$this,'getProcessor'],
             [$log,'pushProcessor']
             );
+        $this->loggerRegistry[$name] = $log;
         return $log;
     }
     /**
