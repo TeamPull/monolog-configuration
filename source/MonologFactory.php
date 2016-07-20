@@ -55,7 +55,7 @@ class MonologFactory
         }
         $this->loggerRegistry[$name] = 'building';
         $this->channel=$name;
-        if (! array_key_exists($name,$this->monologConfig['channels']){
+        if (! array_key_exists($name,$this->monologConfig['channels'])){
             if($name == 'default'){
                 $this->throwError('default channel must be defined');
             }
