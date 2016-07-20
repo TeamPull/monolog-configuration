@@ -51,7 +51,7 @@ class MonologFactory
      */
     public function getLogger($name = 'default'){
         //Cycle detection 
-        if ($this->loggerRegistry[$name]){
+        if (array_key_exists($name,$this->loggerRegistry)){
             if ($this->loggerRegistry[$name] === 'building'){
                  $this->throwError("cycle dependency of loggers: while trying to build '$name'");
             }
