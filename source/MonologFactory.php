@@ -25,6 +25,7 @@ class MonologFactory
     protected $channel;
     protected $channelConfig;
     protected $componentConfig;
+    protected $componentConfigStack = [];
 
     protected $loggerRegistry = [];
     protected function loadMonologConfig($vars)
@@ -141,6 +142,7 @@ class MonologFactory
     public function getProcessor($processorConfig)
     {
         $this->getNamedComponent('processors', $processorConfig);
+        $this->setActiveComponentConfig($processorConfig);
         $class = $processorConfig['class'];
         if (strpos('\\',$class)===false){
             $class = '\\Monolog\\Processor\\' . $class;
@@ -148,6 +150,7 @@ class MonologFactory
         $args = array_key_exists('arguments', $processorConfig) ? $processorConfig['arguments'] : [];
         $rc = new \ReflectionClass($class);
         $p = $rc->newInstanceArgs($args);
+        $this->popActiveComponentConfig()
         return $p;
     }
     
@@ -177,6 +180,15 @@ class MonologFactory
         }
         return false;
     }
+
+    public function setActiveComponentConfig($config){
+       $this->componentConfig = $config;
+       array_push($this->componentConfigStack,$config);
+    }
+
+    public function popActiveComponentConfig(){
+       $this->componentConfig = array_pop($this->componentConfigStack));
+    }
     /**
      * @param $handlerConfig array
      * @return \Monolog\Handler
@@ -184,6 +196,7 @@ class MonologFactory
     public function getHandler($handlerConfig)
     {
         $this->getNamedComponent('handlers',$handlerConfig); 
+        $this->setActiveComponentConfig($handlerConfig);
         $type = array_key_exists('type',$handlerConfig) ? ucfirst(strtolower($handlerConfig['type'])) : false;
         $levels = Logger::getLevels();
         $level = $this->getParameter('level','info');       
@@ -235,6 +248,8 @@ class MonologFactory
                 $handler->setFilenameFormat($filenameFormat);
             }
         }
+        $this->popActiveComponentConfig();
         return $handler;
     }
+    
  }
