@@ -186,7 +186,7 @@ class MonologFactory
         $this->getNamedComponent('handlers',$handlerConfig); 
         $type = array_key_exists('type',$handlerConfig) ? ucfirst(strtolower($handlerConfig['type'])) : false;
         $levels = Logger::getLevels();
-        $level = $this->getParameter('level',info);       
+        $level = $this->getParameter('level','info');       
         $level = $levels[strtoupper($level)];
         $bubble = (bool) $this->getParameter('bubble');
        
