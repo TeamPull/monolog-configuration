@@ -50,10 +50,16 @@ class MonologFactory
      *      
      */
     public function getLogger($name = 'default'){
+        //Cycle detection 
         if ($this->loggerRegistry[$name]){
+            if ($this->loggerRegistry[$name] === 'building'){
+                 $this->throwError("cycle dependency of loggers: while trying to build '$name'");
+            }
+            
             return $this->loggerRegistry[$name];
         }
         $this->loggerRegistry[$name] = 'building';
+
         $this->channel=$name;
         if (! array_key_exists($name,$this->monologConfig['channels'])){
             if($name == 'default'){
@@ -67,9 +73,6 @@ class MonologFactory
             
             // extend logger
             $log = $this->getLogger($this->channelConfig['extends']);
-            if ($log === 'building'){
-                 $this->throwError('cycle dependency of loggers);
-            }
             $this->channel=$name;
             $this->channelConfig = $this->monologConfig['channels'][$name];
             $log = $log->withName($name);
