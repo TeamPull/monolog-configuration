@@ -19,6 +19,7 @@ class MonologFactory
     
     function __construct($vars){
         $this->vars = $vars;
+        $this->logger= new Logger();
         $this->monologConfig = $this->loadMonologConfig($vars);
         $this->logger->pushHandler(new ErrorLogHandler());
     }
@@ -30,7 +31,7 @@ class MonologFactory
     protected $componentConfigStack = [];
 
     //internal loggger
-    private $logger = new Logger();
+    protected $logger;
 
     protected $loggerRegistry = [];
     protected function loadMonologConfig($vars)
