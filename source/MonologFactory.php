@@ -187,7 +187,7 @@ class MonologFactory
     }
 
     public function popActiveComponentConfig(){
-       $this->componentConfig = array_pop($this->componentConfigStack));
+       $this->componentConfig = array_pop($this->componentConfigStack);
     }
     /**
      * @param $handlerConfig array
