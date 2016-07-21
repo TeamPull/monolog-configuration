@@ -150,7 +150,7 @@ class MonologFactory
         $args = array_key_exists('arguments', $processorConfig) ? $processorConfig['arguments'] : [];
         $rc = new \ReflectionClass($class);
         $p = $rc->newInstanceArgs($args);
-        $this->popActiveComponentConfig()
+        $this->popActiveComponentConfig();
         return $p;
     }
     
