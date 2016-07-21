@@ -2,6 +2,7 @@
 namespace Monolog\Configuration;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Monolog\Handler\ErrorlogHandler;
 use Monolog\ErrorHandler;
 use Monolog\Processor\PsrLogMessageProcessor;
 use Symfony\Component\Yaml\Yaml;
@@ -19,6 +20,7 @@ class MonologFactory
     function __construct($vars){
         $this->vars = $vars;
         $this->monologConfig = $this->loadMonologConfig($vars);
+        $this->logger->pushHandler(new ErrorLogHandler());
     }
 
     protected $monologConfig;
@@ -26,6 +28,9 @@ class MonologFactory
     protected $channelConfig;
     protected $componentConfig;
     protected $componentConfigStack = [];
+
+    //internal loggger
+    private $logger = new Logger();
 
     protected $loggerRegistry = [];
     protected function loadMonologConfig($vars)
@@ -214,7 +219,7 @@ class MonologFactory
         }
         
         $rc = new \ReflectionClass($class);
-        
+        print "building $class config:" . json_decode($handlerConfig,true);
         $args = $this->getParameter('arguments');
         if ($args==null) {         
             $args = [];  
@@ -226,8 +231,11 @@ class MonologFactory
             foreach($parameters as $parameter){
                 $arg = $this->getArg($parameter->name);
                 if ($arg === null){
+                    print $parameter->name . " is not definde";
                     break;
                 }
+                this->logger->debug($parameter->name . "-> $arg");
+                print $parameter->name . "-> $arg";
                 $args[] = $arg;
             }
             
