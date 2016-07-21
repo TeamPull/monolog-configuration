@@ -214,10 +214,10 @@ class MonologFactory
         }
         
         $rc = new \ReflectionClass($class);
-
-        $args = [];
+        
         $args = $this->getParameter('arguments');
-        if ($args==null) {           
+        if ($args==null) {         
+            $args = [];  
             $type = strtolower($type);
                       
             $constructor = $rc->getConstructor();
