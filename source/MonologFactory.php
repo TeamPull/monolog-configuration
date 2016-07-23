@@ -2,7 +2,7 @@
 namespace Monolog\Configuration;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
-use Monolog\Handler\ErrorlogHandler;
+use Monolog\Handler\ErrorLogHandler;
 use Monolog\ErrorHandler;
 use Monolog\Processor\PsrLogMessageProcessor;
 use Symfony\Component\Yaml\Yaml;
