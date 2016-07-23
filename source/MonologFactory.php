@@ -240,7 +240,7 @@ class MonologFactory
             foreach($parameters as $parameter){
                 $arg = $this->getArg($parameter->name);
                 if ($arg === null && (!$parameter->allowsNull())){                    
-                    $this->throwError("missing parameter '". parameter->name ."' for $handlerName handler");
+                    $this->throwError("missing parameter '". $parameter->name ."' for $handlerName handler");
                 }
                 $this->logger->debug($parameter->name . "\-\> $arg");
                 print $parameter->name . "-> $arg";
