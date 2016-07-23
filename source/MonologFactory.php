@@ -221,7 +221,7 @@ class MonologFactory
         
         $rc = new \ReflectionClass($class);
         $this->logger->debug("building $class config");
-        print "building $class config:" . json_decode($handlerConfig,true);
+        print "building $class config:" . json_encode($handlerConfig,true);
         $args = $this->getParameter('arguments');
         if ($args==null) {         
             $args = [];  
