@@ -126,7 +126,7 @@ class MonologFactory
            }
         } else {
              if($components){
-                  $this->throw("$componentKey must be a list");
+                  $this->throwError("$componentKey must be a list");
              }
         }
     }
@@ -239,9 +239,8 @@ class MonologFactory
             
             foreach($parameters as $parameter){
                 $arg = $this->getArg($parameter->name);
-                if ($arg === null){
-                    print $parameter->name . " is not definde";
-                    break;
+                if ($arg === null && (!$parameter->allowsNull())){                    
+                    $this->throwError("missing parameter '". parameter->name ."' for $handlerName handler");
                 }
                 $this->logger->debug($parameter->name . "\-\> $arg");
                 print $parameter->name . "-> $arg";
