@@ -119,9 +119,8 @@ class MonologFactory
     protected function componentBuilder($componentKey,callable $getter,callable $pusher){
         $components = $this->channelConfig[$componentKey];
         if(is_array($components) && $this->isList($arr)){           
-           foreach($components as $componentConfig){
-              $this->componentConfig = $componentConfig;                 
-              $component = $getter($componentConfig);
+           foreach($components as $componentName){                               
+              $component = $getter($componentName);
               if($component == null){$this->throwError("$componentKey was not created");}
               $pusher($component);
            }
@@ -132,15 +131,13 @@ class MonologFactory
         }
     }
 
-    protected function getNamedComponent($componentType,&$componentConfig){        
-        if(!is_array($componentConfig)){
-             $componentName = $componentConfig;
-             $componentConfigSection = $this->monologConfig[$componentType];
-             if (!array_key_exists($componentName,$componentConfigSection)){
-                 $this->throwError("$componentType - $componentName was refered in monolog configuration but was not defined");
-             }
-             $componentConfig = $componentConfigSection[$componentName];
-        }               
+    protected function getNamedComponent($componentType,$componentName){        
+        
+         $componentConfigSection = $this->monologConfig[$componentType];
+         if (!array_key_exists($componentName,$componentConfigSection)){
+             $this->throwError("$componentType - $componentName was refered in monolog configuration but was not defined");
+         }
+         return $componentConfigSection[$componentName];                      
     }
 
     protected function throwError($message){
@@ -155,9 +152,9 @@ class MonologFactory
     /**
      * @return callable
      */
-    public function getProcessor($processorConfig)
+    public function getProcessor($processorName)
     {
-        $this->getNamedComponent('processors', $processorConfig);
+        $processorConfig = $this->getNamedComponent('processors', $processorName);
         $this->setActiveComponentConfig($processorConfig);
         $class = $processorConfig['class'];
         if (strpos('\\',$class)===false){
@@ -209,9 +206,9 @@ class MonologFactory
      * @param $handlerConfig array
      * @return \Monolog\Handler
      */
-    public function getHandler($handlerConfig)
+    public function getHandler($handlerName)
     {
-        $this->getNamedComponent('handlers',$handlerConfig); 
+        $handlerConfig = $this->getNamedComponent('handlers',$handlerName); 
         $this->setActiveComponentConfig($handlerConfig);
         $type = array_key_exists('type',$handlerConfig) ? ucfirst(strtolower($handlerConfig['type'])) : false;
         $levels = Logger::getLevels();
