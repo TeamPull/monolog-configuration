@@ -21,7 +21,7 @@ handlers:
         stream: 'php://stderr' 
         level: error 
     mail:
-        type: NativeMailerHandler
+        type: NativeMailer
         to: abc@example.com
         from: def@example.com
         subject: "test logmessage from unittest"
