@@ -236,7 +236,7 @@ class MonologFactory
                     print $parameter->name . " is not definde";
                     break;
                 }
-                this->logger->debug($parameter->name . "\-\> $arg");
+                $this->logger->debug($parameter->name . "\-\> $arg");
                 print $parameter->name . "-> $arg";
                 $args[] = $arg;
             }
