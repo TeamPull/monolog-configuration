@@ -118,7 +118,7 @@ class MonologFactory
      */
     protected function componentBuilder($componentKey,callable $getter,callable $pusher){
         $components = $this->channelConfig[$componentKey];
-        if(is_array($components) && $this->isList($arr)){           
+        if(is_array($components) && $this->isList($components)){           
            foreach($components as $componentName){                               
               $component = $getter($componentName);
               if($component == null){$this->throwError("$componentKey was not created");}
