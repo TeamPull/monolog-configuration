@@ -19,9 +19,9 @@ class MonologFactory
     
     function __construct($vars){
         $this->vars = $vars;
-        $this->logger= new Logger();
-        $this->monologConfig = $this->loadMonologConfig($vars);
+        $this->logger= new Logger('LoggerFactory');       
         $this->logger->pushHandler(new ErrorLogHandler());
+        $this->monologConfig = $this->loadMonologConfig($vars);
     }
 
     protected $monologConfig;
