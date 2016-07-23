@@ -9,12 +9,9 @@ channels:
         handlers: [stderr]
         processors: [PsrLogMessageProcessor]
         use_microseconds: true 
-    testInline:
-        handlers: 
-            type: NativeMailerHandler
-            to: abc@example.com
-            from: def@example.com
-            subject: "test logmessage from unittest"
+    testMail:
+        handlers: [mail]
+    others: {}            
     errorHandlerTest:
         extends: default
         register_php_handlers: true   
@@ -23,6 +20,11 @@ handlers:
         type: stream 
         file: 'php://stderr' 
         level: error 
+    mail:
+        type: NativeMailerHandler
+        to: abc@example.com
+        from: def@example.com
+        subject: "test logmessage from unittest"
 processors:
     PsrLogMessageProcessor: 
         class: PsrLogMessageProcessor
