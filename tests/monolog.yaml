@@ -18,7 +18,7 @@ channels:
 handlers: 
     stderr: 
         type: stream 
-        file: 'php://stderr' 
+        stream: 'php://stderr' 
         level: error 
     mail:
         type: NativeMailerHandler
