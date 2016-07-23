@@ -45,6 +45,12 @@ class MonologFactory
         return Yaml::parse(file_get_contents($path));
     }
 
+    private function isList(array $arr)
+    {
+        $k = array_keys( $arr );
+        return $k === array_keys( $k );
+    }
+
     /**
      * creates a logger object
      * this method should be called only once during a request
@@ -112,13 +118,17 @@ class MonologFactory
      */
     protected function componentBuilder($componentKey,callable $getter,callable $pusher){
         $components = $this->channelConfig[$componentKey];
-        if(is_array($components)){          
+        if(is_array($components) && $this->isList($arr)){           
            foreach($components as $componentConfig){
               $this->componentConfig = $componentConfig;                 
               $component = $getter($componentConfig);
               if($component == null){$this->throwError("$componentKey was not created");}
               $pusher($component);
            }
+        } else {
+             if($components){
+                  $this->throw("$componentKey must be a list");
+             }
         }
     }
 
