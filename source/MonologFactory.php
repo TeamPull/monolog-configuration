@@ -123,7 +123,7 @@ class MonologFactory
      * Gets a components (handler,processor) from the configuration
      */
     protected function componentBuilder($componentKey,callable $getter,callable $pusher){
-        $this->logger->debug('building $componentKey', $this->channelConfig);
+        $this->logger->debug("building $componentKey", $this->channelConfig);
         if (!array_key_exists($componentKey,$this->channelConfig)){
             return false;
         }
@@ -237,8 +237,7 @@ class MonologFactory
         }
         
         $rc = new \ReflectionClass($class);
-        $this->logger->debug("building $class config");
-        print "building $class config:" . json_encode($handlerConfig,true);
+        $this->logger->debug("building $class config",$handlerConfig);
         $args = $this->getParameter('arguments');
         if ($args==null) {         
             $args = [];  
@@ -252,8 +251,7 @@ class MonologFactory
                 if ($arg === null && (!$parameter->allowsNull())){                    
                     $this->throwError("missing parameter '". $parameter->name ."' for $handlerName handler");
                 }
-                $this->logger->debug($parameter->name . "\-\> $arg");
-                print $parameter->name . "-> $arg";
+                $this->logger->debug($parameter->name . "-> $arg");             
                 $args[] = $arg;
             }
             
