@@ -62,17 +62,18 @@ class MonologFactory
      * @return Logger
      *      
      */
-    public function getLogger($name = 'default'){
-        //Cycle detection 
+    public function getLogger($name = 'default'){ 
+        $this->logger->debug("getting logger $name");
         if (array_key_exists($name,$this->loggerRegistry)){
+            //Cycle detection
             if ($this->loggerRegistry[$name] === 'building'){
-                 $this->throwError("cycle dependency of loggers: while trying to build '$name'");
+                 $this->throwError("cycle dependency of loggers: while trying to build '$name' requested by $this->channel");
             }
-            
+            $this->logger->debug("getting logger $name from cache");
             return $this->loggerRegistry[$name];
         }
         $this->loggerRegistry[$name] = 'building';
-
+        try{
         $this->channel=$name;
         if (! array_key_exists($name,$this->monologConfig['channels'])){
             if($name == 'default'){
@@ -110,6 +111,11 @@ class MonologFactory
             [$this,'getProcessor'],
             [$log,'pushProcessor']
             );
+        } finally {
+           //In case of exceptions we want the internal 'building' state to be reseted
+           //so the caller can try it agian
+           unset($this->loggerRegistry[$name]);
+        }
         $this->loggerRegistry[$name] = $log;
         return $log;
     }
@@ -117,8 +123,12 @@ class MonologFactory
      * Gets a components (handler,processor) from the configuration
      */
     protected function componentBuilder($componentKey,callable $getter,callable $pusher){
+        $this->logger->debug('building $componentKey', $this->channelConfig);
+        if (!array_key_exists($componentKey,$this->channelConfig)){
+            return false;
+        }
         $components = $this->channelConfig[$componentKey];
-        if(is_array($components) && $this->isList($components)){           
+        if (is_array($components) && $this->isList($components)){           
            foreach($components as $componentName){                               
               $component = $getter($componentName);
               if($component == null){$this->throwError("$componentKey was not created");}
