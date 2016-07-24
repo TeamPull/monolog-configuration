@@ -224,7 +224,7 @@ class MonologFactory
     {
         $handlerConfig = $this->getNamedComponent('handlers',$handlerName); 
         $this->setActiveComponentConfig($handlerConfig);
-        $type = array_key_exists('type',$handlerConfig) ? ucfirst(strtolower($handlerConfig['type'])) : false;
+        $type = array_key_exists('type',$handlerConfig) ? ucfirst($handlerConfig['type']) : false;
         $levels = Logger::getLevels();
         $level = $this->getParameter('level','info');       
         $level = $levels[strtoupper($level)];
