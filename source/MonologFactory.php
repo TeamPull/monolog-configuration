@@ -255,8 +255,12 @@ class MonologFactory
             
             foreach($parameters as $parameter){
                 $arg = $this->getArg($parameter->name);
-                if ($arg === null && (!$parameter->allowsNull())){                    
-                    $this->throwError("missing parameter '". $parameter->name ."' for $handlerName handler");
+                if ($arg === null){           
+                    if($parameter->isDefaultValueAvailable()){
+                        $arg = $parameter->getDefaultValue();
+                    }elseif(!$parameter->allowsNull()){      
+                        $this->throwError("missing parameter '". $parameter->name ."' for $handlerName handler");
+                    }
                 }
                 $this->logger->debug($parameter->name . "-> $arg");             
                 $args[] = $arg;
