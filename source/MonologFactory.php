@@ -63,6 +63,9 @@ class MonologFactory
      *      
      */
     public function getLogger($name = 'default'){ 
+        if($name == null){
+           $name = 'default';  
+        }
         $this->logger->debug("getting logger $name");
         if (array_key_exists($name,$this->loggerRegistry)){
             //Cycle detection
