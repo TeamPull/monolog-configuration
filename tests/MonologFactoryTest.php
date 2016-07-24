@@ -25,14 +25,22 @@ class MonologFactoryTest extends \PHPUnit_Framework_TestCase
         return $log;
     }
 
-    public function testInlineHandler()
+    public function testMailHandler()
     {
-        $this->getLogger('testInline');
+        $this->getLogger('testMail');
+        //assert mailhandler
+    }
+
+    public function testUnkownChannel()
+    {
+        $this->getLogger('_NOTEXISTINGCHANNELNAME_');
+        //assert otherChannel
     }
     
     public function testDefaultLogger()
     {
         $this->getLogger(null);
+        //assertDefaultHandler
     }
 
 
