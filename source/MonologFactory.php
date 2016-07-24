@@ -77,9 +77,13 @@ class MonologFactory
         $this->channel=$name;
         if (! array_key_exists($name,$this->monologConfig['channels'])){
             if($name == 'default'){
-                $this->throwError('default channel must be defined');
+                $this->logger->warn('default channel should be defined');             
+            } elseif($name != 'other'){
+                $implizitConfig = ['extends' => 'other'];
+            } else {
+                $implizitConfig = [];
             }
-            $this->monologConfig['channels'][$name] = ['extends'=> 'default'];
+            $this->monologConfig['channels'][$name] = $implizitConfig;                
         }
         $this->channelConfig = $this->monologConfig['channels'][$name];
         
@@ -122,12 +126,12 @@ class MonologFactory
     /**
      * Gets a components (handler,processor) from the configuration
      */
-    protected function componentBuilder($componentKey,callable $getter,callable $pusher){
-        $this->logger->debug("building $componentKey", $this->channelConfig);
+    protected function componentBuilder($componentKey,callable $getter,callable $pusher){        
         if (!array_key_exists($componentKey,$this->channelConfig)){
             return false;
         }
         $components = $this->channelConfig[$componentKey];
+        $this->logger->debug("building $componentKey",$components);
         if (is_array($components) && $this->isList($components)){           
            foreach($components as $componentName){                               
               $component = $getter($componentName);
