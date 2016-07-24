@@ -11,7 +11,9 @@ channels:
         use_microseconds: true 
     testMail:
         handlers: [mail]
-    others: {}            
+        formatters: [myformatter1]
+    others:
+        handlers: [stderr]           
     errorHandlerTest:
         extends: default
         register_php_handlers: true   
@@ -28,3 +30,7 @@ handlers:
 processors:
     PsrLogMessageProcessor: 
         class: PsrLogMessageProcessor
+formatters:
+    myformatter1:
+        class: LineFormatter
+        formatter: [%datetime%] %channel%.%level_name%: %message% %context% %extra%
