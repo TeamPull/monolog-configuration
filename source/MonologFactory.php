@@ -179,6 +179,11 @@ class MonologFactory
         }
         $args = array_key_exists('arguments', $processorConfig) ? $processorConfig['arguments'] : [];
         $rc = new \ReflectionClass($class);
+
+        if ($args==null) {         
+            $args = $this->createArguments($rc);                                                        
+        }
+   
         $p = $rc->newInstanceArgs($args);
         $this->popActiveComponentConfig();
         return $p;
@@ -219,6 +224,29 @@ class MonologFactory
     public function popActiveComponentConfig(){
        $this->componentConfig = array_pop($this->componentConfigStack);
     }
+
+    protected createArguments(ReflectionClass $rc)
+    {
+        $class = $rc->getName();
+        $args = []; 
+        $constructor = $rc->getConstructor();
+        $parameters = $constructor->getParameters();
+            
+        foreach($parameters as $parameter){
+            $arg = $this->getArg($parameter->name);
+            if ($arg === null) {           
+                if ($parameter->isDefaultValueAvailable()) {
+                    $arg = $parameter->getDefaultValue();
+                } elseif (!$parameter->allowsNull()) {      
+                    $this->throwError("missing parameter '". $parameter->name ."' for $class");
+                }
+            }
+            $this->logger->debug($parameter->name . "-> $arg");             
+            $args[] = $arg;
+        }
+        return $args;
+    }
+
     /**
      * @param $handlerConfig array
      * @return \Monolog\Handler
@@ -246,31 +274,17 @@ class MonologFactory
         $rc = new \ReflectionClass($class);
         $this->logger->debug("building $class config",$handlerConfig);
         $args = $this->getParameter('arguments');
-        if ($args==null) {         
-            $args = [];  
+
+        if ($args==null) {
             $type = strtolower($type);
-                      
-            $constructor = $rc->getConstructor();
-            $parameters = $constructor->getParameters();
-            
-            foreach($parameters as $parameter){
-                $arg = $this->getArg($parameter->name);
-                if ($arg === null){           
-                    if($parameter->isDefaultValueAvailable()){
-                        $arg = $parameter->getDefaultValue();
-                    }elseif(!$parameter->allowsNull()){      
-                        $this->throwError("missing parameter '". $parameter->name ."' for $handlerName handler");
-                    }
-                }
-                $this->logger->debug($parameter->name . "-> $arg");             
-                $args[] = $arg;
-            }
-            
-            if ($type == 'couchdb' ) {
+            if ($type == 'couchdb') {
                 $args[0] = $handlerConfig;
-            }          
-                                                   
-        } 
+            } 
+        }
+
+        if ($args==null) {         
+            $args = $this->createArguments($rc);                                                        
+        }      
                             
         $handler = $rc->newInstanceArgs($args);
         $handler->setBubble($bubble);
