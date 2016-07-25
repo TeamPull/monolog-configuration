@@ -33,4 +33,4 @@ processors:
 formatters:
     myformatter1:
         class: LineFormatter
-        formatter: [%datetime%] %channel%.%level_name%: %message% %context% %extra%
+        formatter: '[%datetime%] %channel%.%level_name%: %message% %context% %extra%'
