@@ -3,6 +3,9 @@ namespace Monolog;
 use Monolog\Configuration\MonologFactory;
 class MonologFactoryTest extends \PHPUnit_Framework_TestCase
 {
+
+    private $log;
+
     /** creates a LoggerFactory (testsubject) that reads a test configuration file
     * @param $name channel/logger name that should be fetched
     */
@@ -22,24 +25,32 @@ class MonologFactoryTest extends \PHPUnit_Framework_TestCase
         //or if that is also not configured a logger with no handlers or a NullLogger will be returned.
         $this->assertNotNull($log);
         $this->assertInstanceOf('Psr\\Log\\LoggerInterface',$log);
+        $this->log = $log;
         return $log;
+    }
+
+    private assertHandlers($needed){
+        $handlers = $this->log->getHandlers();
+        $this->assertInstanceOf($needed,$handlers[0]);
     }
 
     public function testMailHandler()
     {
         $this->getLogger('testMail');
-        //assert mailhandler
+        $this->assertHandler('\Monolog\Handler\NativeMailerHandler');
     }
 
     public function testUnkownChannel()
     {
         $this->getLogger('_NOTEXISTINGCHANNELNAME_');
+        $this->assertHandler('\Monolog\Handler\NativeMailerHandler');
         //assert otherChannel
     }
     
     public function testDefaultLogger()
     {
         $this->getLogger(null);
+        $this->assertHandler('\Monolog\Handler\StreamHandler');
         //assertDefaultHandler
     }
 
