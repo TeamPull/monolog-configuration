@@ -29,7 +29,7 @@ class MonologFactoryTest extends \PHPUnit_Framework_TestCase
         return $log;
     }
 
-    private function assertHandlers($needed){
+    private function assertHandler($needed){
         $handlers = $this->log->getHandlers();
         $this->assertInstanceOf($needed,$handlers[0]);
     }
