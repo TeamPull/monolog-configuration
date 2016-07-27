@@ -218,7 +218,7 @@ class MonologFactory
             $levels = Logger::getLevels();
             $level = $arg ? $levels[strtoupper($arg)] : null;
         }
-        $this->logger->debug("getArg $name",$arg);
+        $this->logger->debug("getArg $name -> $arg");
         return $arg;
     }
 
