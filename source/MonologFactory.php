@@ -78,36 +78,36 @@ class MonologFactory
         $this->loggerRegistry[$name] = 'building';
         try{
             $this->channel=$name;
-        if (! array_key_exists($name,$this->monologConfig['channels'])){
-            if($name == 'default'){
-                $this->logger->warn('default channel should be defined');             
-            } elseif($name != 'other'){
-                $implizitConfig = ['extends' => 'other'];
-            } else {
-                $implizitConfig = [];
+            if (! array_key_exists($name,$this->monologConfig['channels'])){
+                if($name == 'default'){
+                    $this->logger->warn('default channel should be defined');             
+                } elseif($name != 'other'){
+                    $implizitConfig = ['extends' => 'other'];
+                } else {
+                    $implizitConfig = [];
+                }
+                $this->monologConfig['channels'][$name] = $implizitConfig;                
             }
-            $this->monologConfig['channels'][$name] = $implizitConfig;                
-        }
-        $this->channelConfig = $this->monologConfig['channels'][$name];
-        
-        if (array_key_exists('extends',$this->channelConfig)){
-            
-            // extend logger
-            $log = $this->getLogger($this->channelConfig['extends']);
-            $this->channel=$name;
             $this->channelConfig = $this->monologConfig['channels'][$name];
-            $log = $log->withName($name);
-        } else {
-            // create logger
-            $log = new Logger($name);
-        }
-        if (array_key_exists('use_microseconds',$this->channelConfig)){
-            $log->useMicrosecondTimestamps($this->channelConfig['use_microseconds']);
-        }
-        if (array_key_exists('register_php_handlers',$this->channelConfig) && $this->channelConfig['register_php_handlers']) {
-            $this->logger->debug("registering error handlers to channel '$name'");
-            ErrorHandler::register($log);
-        }       
+        
+            if (array_key_exists('extends',$this->channelConfig)){
+            
+                // extend logger
+                $log = $this->getLogger($this->channelConfig['extends']);
+                $this->channel=$name;
+                $this->channelConfig = $this->monologConfig['channels'][$name];
+                $log = $log->withName($name);
+            } else {
+                // create logger
+                $log = new Logger($name);
+            }
+            if (array_key_exists('use_microseconds',$this->channelConfig)){
+                $log->useMicrosecondTimestamps($this->channelConfig['use_microseconds']);
+            }
+            if (array_key_exists('register_php_handlers',$this->channelConfig) && $this->channelConfig['register_php_handlers']) {
+                $this->logger->debug("registering error handlers to channel '$name'");
+                ErrorHandler::register($log);
+            }       
 
             $handlers = $this->componentBuilder(
                 'handlers', [$this,'getHandler']
