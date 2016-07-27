@@ -112,12 +112,14 @@ class MonologFactory
             $handlers = $this->componentBuilder(
                 'handlers', [$this,'getHandler']
             );
+            $this->logger->debug("setting handlers",$handlers);
             $log->setHandlers($handlers);
 
             $processors = $this->componentBuilder(
                 'processors', [$this,'getProcessor']            
             );
 
+            $this->logger->debug("setting processors",$processors);
             foreach (array_reverse($processors) as $processor){
                 $log->pushProcessor($processor);
             }
@@ -128,6 +130,7 @@ class MonologFactory
            unset($this->loggerRegistry[$name]);
         }
         $this->loggerRegistry[$name] = $log;
+        $this->logger->debug("returning logger,$log);
         return $log;
     }
     /**
@@ -151,9 +154,10 @@ class MonologFactory
            if($component == null){
               $this->throwError("$componentKey was not created");
            }
+           $this->logger->debug("$componentName created",$component);
            $components[] = $component;
         }
-        
+        $this->logger->debug('components created",$components);
         return $components;  
     }
 
@@ -199,6 +203,7 @@ class MonologFactory
     }
     
     protected function getParameter($name, $default=null){
+        $this->logger->debug("get parameter $name",$this->componentConfig);
         if (array_key_exists($name,$this->componentConfig)) {
             return $this->componentConfig[$name];        
         }
@@ -213,6 +218,7 @@ class MonologFactory
             $levels = Logger::getLevels();
             $level = $arg ? $levels[strtoupper($arg)] : null;
         }
+        $this->logger->debug("getArg $name",$arg);
         return $arg;
     }
 
