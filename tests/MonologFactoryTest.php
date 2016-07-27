@@ -51,7 +51,7 @@ class MonologFactoryTest extends \PHPUnit_Framework_TestCase
         //it not guaranteed that the loggername will have the requested name if there is no configuration
         //because guaranteeing that would make it unflexible in sense of perfomance tuning, anyway in moment of writing the channelname will be
         //_NOTEXISTINGCHANNELNAME_ but we only want to test that it is not one of the other configured channels
-        $this->assertNotEquals('default',$this->log->getName())
+        $this->assertNotEquals('default',$this->log->getName());
     }
     
     public function testDefaultLogger()
@@ -60,7 +60,7 @@ class MonologFactoryTest extends \PHPUnit_Framework_TestCase
         //assertDefaultHandler
         //only the 'default' channel has the StreamHandler configured first
         $this->assertHandler('\Monolog\Handler\StreamHandler');
-        $this->assertEquals('default',$this->log->getName())
+        $this->assertEquals('default',$this->log->getName());
     }
 
 
