@@ -142,9 +142,10 @@ class MonologFactory
         $components = [];
         if (is_array($componentNames) && $this->isList($componentNames)){           
            foreach($componentNames as $componentName){                               
-              $component = $getter($componentName);
-              if($component == null){$this->throwError("$componentKey was not created");}
-              $pusher($component);
+               $component = $getter($componentName);
+               if($component == null){
+                  $this->throwError("$componentKey was not created");
+               }
            }
         } else {
              if($components){
