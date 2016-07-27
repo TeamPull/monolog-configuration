@@ -157,7 +157,7 @@ class MonologFactory
            $this->logger->debug("$componentName created",$component);
            $components[] = $component;
         }
-        $this->logger->debug('components created",$components);
+        $this->logger->debug("components created",$components);
         return $components;  
     }
 
