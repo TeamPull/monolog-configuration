@@ -232,7 +232,7 @@ class MonologFactory
         if($constructor == null){
             return $args;
         }
-        $class = $rc->getName()
+        $class = $rc->getName();
         $parameters = $constructor->getParameters();
             
         foreach($parameters as $parameter){
