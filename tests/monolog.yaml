@@ -19,12 +19,12 @@ channels:
         register_php_handlers: true   
 handlers:
     SyslogHandler:
-        type: Syslog
-        expandNewlines: true
-        messageType: 4
+        type: Syslog        
         level: info
     ErrorLogHandler:
         type: ErrorLog
+        expandNewlines: true
+        messageType: 4
     stderr: 
         type: stream 
         stream: 'php://stderr' 
