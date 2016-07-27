@@ -130,7 +130,7 @@ class MonologFactory
            unset($this->loggerRegistry[$name]);
         }
         $this->loggerRegistry[$name] = $log;
-        $this->logger->debug("returning logger,$log);
+        $this->logger->debug("returning logger",$log);
         return $log;
     }
     /**
