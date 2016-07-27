@@ -22,9 +22,9 @@ class MonologFactoryTest extends \PHPUnit_Framework_TestCase
         //get a logger because it should possible that plugins in applications
         //log to their own channel but work even if configuration file is not adapted
         //they will then use the channel 'other' if that channel is configured
-        //or if that is also not configured a logger with no handlers or a NullLogger will be returned.
+        //or if that is also not configured a logger with no handlers will be returned.
         $this->assertNotNull($log);
-        $this->assertInstanceOf('Psr\\Log\\LoggerInterface',$log);
+        $this->assertInstanceOf('\Monolog\Logger',$log);
         $this->log = $log;
         return $log;
     }
