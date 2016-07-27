@@ -105,6 +105,7 @@ class MonologFactory
             $log->useMicrosecondTimestamps($this->channelConfig['use_microseconds']);
         }
         if (array_key_exists('register_php_handlers',$this->channelConfig) && $this->channelConfig['register_php_handlers']) {
+            $this->logger->debug("registering error handlers to channel '$name'");
             ErrorHandler::register($log);
         }       
 
