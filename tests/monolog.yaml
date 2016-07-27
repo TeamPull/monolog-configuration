@@ -13,11 +13,17 @@ channels:
         handlers: [mail]
         formatters: [myformatter1]
     others:
-        handlers: [stderr]           
+        handlers: [ErrorLogHandler,SyslogHandler]           
     errorHandlerTest:
         extends: default
         register_php_handlers: true   
-handlers: 
+handlers:
+    SyslogHandler:
+        expandNewlines: true
+        messageType: 4
+        level: info
+    ErrorLogHandler:
+        type: ErrorLog
     stderr: 
         type: stream 
         stream: 'php://stderr' 
