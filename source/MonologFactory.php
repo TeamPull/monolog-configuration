@@ -77,7 +77,7 @@ class MonologFactory
         }
         $this->loggerRegistry[$name] = 'building';
         try{
-        $this->channel=$name;
+            $this->channel=$name;
         if (! array_key_exists($name,$this->monologConfig['channels'])){
             if($name == 'default'){
                 $this->logger->warn('default channel should be defined');             
@@ -109,16 +109,19 @@ class MonologFactory
             ErrorHandler::register($log);
         }       
 
-        $this->componentBuilder(
-            'handlers',
-            [$this,'getHandler'],
-            [$log,'pushHandler']
+            $handlers = $this->componentBuilder(
+                'handlers', [$this,'getHandler']
             );
-        $this->componentBuilder(
-            'processors',
-            [$this,'getProcessor'],
-            [$log,'pushProcessor']
+            $log->setHandlers($handlers);
+
+            $processors = $this->componentBuilder(
+                'processors', [$this,'getProcessor']            
             );
+
+            foreach (array_reverse($processors) as $processor){
+                $log->pushProcessor($processor);
+            }
+
         } finally {
            //In case of exceptions we want the internal 'building' state to be reseted
            //so the caller can try it agian
@@ -130,14 +133,15 @@ class MonologFactory
     /**
      * Gets a components (handler,processor) from the configuration
      */
-    protected function componentBuilder($componentKey,callable $getter,callable $pusher){        
+    protected function componentBuilder($componentKey,callable $getter){        
         if (!array_key_exists($componentKey,$this->channelConfig)){
             return false;
         }
-        $components = $this->channelConfig[$componentKey];
-        $this->logger->debug("building $componentKey",$components);
-        if (is_array($components) && $this->isList($components)){           
-           foreach($components as $componentName){                               
+        $componentNames = $this->channelConfig[$componentKey];
+        $this->logger->debug("building $componentKey",$componentNames);
+        $components = [];
+        if (is_array($componentNames) && $this->isList($componentNames)){           
+           foreach($componentNames as $componentName){                               
               $component = $getter($componentName);
               if($component == null){$this->throwError("$componentKey was not created");}
               $pusher($component);
@@ -147,6 +151,7 @@ class MonologFactory
                   $this->throwError("$componentKey must be a list");
              }
         }
+        return $components;
     }
 
     protected function getNamedComponent($componentType,$componentName){        
