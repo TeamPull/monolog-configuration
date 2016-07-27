@@ -227,9 +227,12 @@ class MonologFactory
 
     protected function createArguments(\ReflectionClass $rc)
     {
-        $class = $rc->getName();
         $args = []; 
         $constructor = $rc->getConstructor();
+        if($constructor == null){
+            return $args;
+        }
+        $class = $rc->getName()
         $parameters = $constructor->getParameters();
             
         foreach($parameters as $parameter){
