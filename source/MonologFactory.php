@@ -225,7 +225,7 @@ class MonologFactory
        $this->componentConfig = array_pop($this->componentConfigStack);
     }
 
-    protected function createArguments(ReflectionClass $rc)
+    protected function createArguments(\ReflectionClass $rc)
     {
         $class = $rc->getName();
         $args = []; 
