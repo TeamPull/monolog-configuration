@@ -140,19 +140,21 @@ class MonologFactory
         $componentNames = $this->channelConfig[$componentKey];
         $this->logger->debug("building $componentKey",$componentNames);
         $components = [];
-        if (is_array($componentNames) && $this->isList($componentNames)){           
-           foreach($componentNames as $componentName){                               
-               $component = $getter($componentName);
-               if($component == null){
-                  $this->throwError("$componentKey was not created");
-               }
+        if (!(is_array($componentNames) && $this->isList($componentNames))){  
+           if($componentNames){
+               $this->throwError("the value given in $componentKey must be a list");
            }
-        } else {
-             if($components){
-                  $this->throwError("$componentKey must be a list");
-             }
         }
-        return $components;
+   
+        foreach($componentNames as $componentName){                               
+           $component = $getter($componentName);
+           if($component == null){
+              $this->throwError("$componentKey was not created");
+           }
+           $components[] = $component;
+        }
+        
+        return $components;  
     }
 
     protected function getNamedComponent($componentType,$componentName){        
