@@ -112,8 +112,11 @@ class MonologFactory
             $handlers = $this->componentBuilder(
                 'handlers', [$this,'getHandler']
             );
-            $this->logger->debug("setting handlers",$handlers);
-            $log->setHandlers($handlers);
+
+            $this->logger->debug("adding handlers",$handlers);
+            foreach (array_reverse($handlers) as $handler){
+                $log->pushHandler($handler);
+            }
 
             $processors = $this->componentBuilder(
                 'processors', [$this,'getProcessor']            
