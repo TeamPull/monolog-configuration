@@ -19,6 +19,7 @@ channels:
         register_php_handlers: true   
 handlers:
     SyslogHandler:
+        type: Syslog
         expandNewlines: true
         messageType: 4
         level: info
