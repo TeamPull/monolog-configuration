@@ -32,6 +32,7 @@ class MonologFactoryTest extends \PHPUnit_Framework_TestCase
     private function assertHandler($needed){
         $handlers = $this->log->getHandlers();
         $this->assertNotNull($handlers);
+        print_r($handlers);
         $this->assertInstanceOf($needed,$handlers[0]);
     }
 
