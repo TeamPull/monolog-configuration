@@ -154,7 +154,7 @@ class MonologFactory
            if($component == null){
               $this->throwError("$componentKey was not created");
            }
-           $this->logger->debug("$componentName created",$component);
+           $this->logger->debug("$componentName created",[$component]);
            $components[] = $component;
         }
         $this->logger->debug("components created",$components);
