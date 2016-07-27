@@ -135,7 +135,7 @@ class MonologFactory
      */
     protected function componentBuilder($componentKey,callable $getter){        
         if (!array_key_exists($componentKey,$this->channelConfig)){
-            return false;
+            return [];
         }
         $componentNames = $this->channelConfig[$componentKey];
         $this->logger->debug("building $componentKey",$componentNames);
