@@ -45,15 +45,22 @@ class MonologFactoryTest extends \PHPUnit_Framework_TestCase
     public function testUnkownChannel()
     {
         $this->getLogger('_NOTEXISTINGCHANNELNAME_');
-        $this->assertHandler('\Monolog\Handler\NativeMailerHandler');
         //assert otherChannel
+        //only the 'other' channel has the ErrorLogHandler configured first
+        $this->assertHandler('\Monolog\Handler\ErrorLogHandler');
+        //it not guaranteed that the loggername will have the requested name if there is no configuration
+        //because guaranteeing that would make it unflexible in sense of perfomance tuning, anyway in moment of writing the channelname will be
+        //_NOTEXISTINGCHANNELNAME_ but we only want to test that it is not one of the other configured channels
+        $this->assertNotEquals('default',$this->log->getName())
     }
     
     public function testDefaultLogger()
     {
         $this->getLogger(null);
-        $this->assertHandler('\Monolog\Handler\StreamHandler');
         //assertDefaultHandler
+        //only the 'default' channel has the StreamHandler configured first
+        $this->assertHandler('\Monolog\Handler\StreamHandler');
+        $this->assertEquals('default',$this->log->getName())
     }
 
 
