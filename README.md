@@ -20,7 +20,6 @@ https://github.com/keywan-ghadami-oxid/monolog-configuration/wiki
 # TODO
 - create gitter chat
 - improve documentation (github wiki) 
-- add support for more/all handlers and processors
 - maybe setup bounty program https://www.bountysource.com/
 - make some example integrations for frameworks not having a monolog configuration
   - SILEX 
