@@ -3,6 +3,8 @@
 
 # monolog-configuration
 configuration support for the php logger library monolog
+see also https://github.com/theorchard/monolog-cascade
+
 
 # Documentation
 there is a wiki:
