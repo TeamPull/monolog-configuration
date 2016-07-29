@@ -96,7 +96,7 @@ class MonologFactory
         try{
             $this->channel=$name;
             $channels = $this->getMonologSetting('channels',$this->getMonologSetting('loggers',[]));
-            if (! array_key_exists($name,$channels['channels'])){
+            if (! array_key_exists($name,$channels)){
                 if($name == 'default'){
                     $this->logger->warn('default channel should be defined');             
                 } elseif($name != 'other'){
