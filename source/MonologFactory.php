@@ -39,7 +39,7 @@ class MonologFactory
         $path = $vars['monolog_config_dir'] . '/monolog.dist.yaml';
         $dist = [];
         if(file_exists($path)){
-            $dist = Yaml::parse(file_get_contents($path))          
+            $dist = Yaml::parse(file_get_contents($path));          
         }
         $path = $vars['monolog_config_dir'] . '/monolog.yaml';
         $custom = [];
