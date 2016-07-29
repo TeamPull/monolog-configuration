@@ -113,7 +113,7 @@ class MonologFactory
                 // extend logger
                 $log = $this->getLogger($this->channelConfig['extends']);
                 $this->channel=$name;
-                $this->channelConfig = $this->monologConfig['channels'][$name];
+                $this->channelConfig = $channels[$name];
                 $log = $log->withName($name);
             } else {
                 // create logger
