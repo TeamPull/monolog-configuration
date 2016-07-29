@@ -35,14 +35,20 @@ class MonologFactory
 
     protected $loggerRegistry = [];
     protected function loadMonologConfig($vars)
-    {       
-        $path = $vars['monolog_config_dir'] . '/monolog.yaml';
-        if(!file_exists($path)){
-            $path = $vars['monolog_config_dir'] . '/monolog.dist.yaml';
+    {
+        $path = $vars['monolog_config_dir'] . '/monolog.dist.yaml';
+        $dist = [];
+        if(file_exists($path)){
+            $dist = Yaml::parse(file_get_contents($path))          
         }
-        //Do not try catch parse erors because the system should
-        // not continue to work until the configuration is fixed
-        return Yaml::parse(file_get_contents($path));
+        $path = $vars['monolog_config_dir'] . '/monolog.yaml';
+        $custom = [];
+        if(file_exists($path)){
+            $custom = Yaml::parse(file_get_contents($path));
+        }
+        
+        $res = array_merge($dist,$custom);
+        return $res;
     }
 
     private function isList(array $arr)
