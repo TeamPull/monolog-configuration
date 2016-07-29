@@ -3,7 +3,7 @@
 # channels 
 # the application can use different channels to make it possible to
 # bring things in different log files (or send it to different handlers)
-channels: 
+loggers: 
     # the default channel is the main channel 
     default: 
         handlers: [stderr]
