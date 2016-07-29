@@ -50,6 +50,23 @@ class MonologFactory
         $k = array_keys( $arr );
         return $k === array_keys( $k );
     }
+    
+
+    private function getChannelSetting($key,$default=null)
+    {
+        if(array_key_exists($key,$this->channelConfig)){
+            return $this->channelConfig[$key];
+        }
+        return $default;
+    }
+
+    private function getMonologSetting($key,$default=null)
+    {
+        if(array_key_exists($key,$this->monologConfig)){
+            return $this->monologConfig[$key];
+        }
+        return $default;
+    }
 
     /**
      * creates a logger object
@@ -78,7 +95,8 @@ class MonologFactory
         $this->loggerRegistry[$name] = 'building';
         try{
             $this->channel=$name;
-            if (! array_key_exists($name,$this->monologConfig['channels'])){
+            $channels = $this->getMonologSetting('channels',$this->getMonologSetting('loggers',[]));
+            if (! array_key_exists($name,$channels['channels'])){
                 if($name == 'default'){
                     $this->logger->warn('default channel should be defined');             
                 } elseif($name != 'other'){
@@ -86,9 +104,9 @@ class MonologFactory
                 } else {
                     $implizitConfig = [];
                 }
-                $this->monologConfig['channels'][$name] = $implizitConfig;                
+                $channels[$name] = $implizitConfig;                
             }
-            $this->channelConfig = $this->monologConfig['channels'][$name];
+            $this->channelConfig = $channels[$name];
         
             if (array_key_exists('extends',$this->channelConfig)){
             
