@@ -128,9 +128,15 @@ class MonologFactory
             if (array_key_exists('use_microseconds',$this->channelConfig)){
                 $log->useMicrosecondTimestamps($this->channelConfig['use_microseconds']);
             }
-            if (array_key_exists('register_php_handlers',$this->channelConfig) && $this->channelConfig['register_php_handlers']) {
+            $errorHandlerArgs = $this->getChannelConfig('register_error_handler');
+            if ($errorHandlerArgs) {
                 $this->logger->debug("registering error handlers to channel '$name'");
-                ErrorHandler::register($log);
+                $levelMap = array_key_exists('levelMap',$errorHandlerArgs) ? $errorHandlerArgs['levelMap'] : [];
+                $callPrevious = array_key_exists('callPrevious',$errorHandlerArgs) ? $errorHandlerArgs['callPrevious'] : true;
+                $errorTypes = array_key_exists('errorTypes',$errorHandlerArgs) ? $errorHandlerArgs['errorTypes'] : -1;
+                $handleOnlyReportedErrors = array_key_exists('handleOnlyReportedErrors',$errorHandlerArgs) ? $errorHandlerArgs['handleOnlyReportedErrors'] : false;         
+           
+                ErrorHandler::registerErrorHandler($log,$levelMap,$callPrevious,$errorTypes,$handleOnlyReportedErrors);
             }       
 
             $handlers = $this->componentBuilder(
