@@ -223,12 +223,10 @@ class MonologFactory
         if (strpos('\\',$class)===false){
             $class = '\\Monolog\\Processor\\' . $class;
         }
-        $args = array_key_exists('arguments', $processorConfig) ? $processorConfig['arguments'] : [];
+        
         $rc = new \ReflectionClass($class);
-
-        if ($args==null) {         
-            $args = $this->createArguments($rc);                                                        
-        }
+                
+        $args = $this->createArguments($rc);                                                               
    
         $p = $rc->newInstanceArgs($args);
         $this->popActiveComponentConfig();
@@ -330,16 +328,11 @@ class MonologFactory
         
         $rc = new \ReflectionClass($class);
         $this->logger->debug("building $class config",$handlerConfig);
-        $args = $this->getParameter('arguments');
-
-        if ($args==null) {
-            $type = strtolower($type);
-            if ($type == 'couchdb') {
-                $args[0] = $handlerConfig;
-            } 
-        }
-
-        if ($args==null) {         
+               
+        $type = strtolower($type);
+        if ($type == 'couchdb') {
+            $args = [$handlerConfig];
+        } else {        
             $args = $this->createArguments($rc);                                                        
         }      
                             
