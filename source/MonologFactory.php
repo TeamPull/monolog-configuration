@@ -219,7 +219,7 @@ class MonologFactory
     {
         $processorConfig = $this->getNamedComponent('processors', $processorName);
         $this->setActiveComponentConfig($processorConfig);
-        $class = $processorConfig['class'];
+        $class = $this->getParameter('class',$processorName);
         if (strpos('\\',$class)===false){
             $class = '\\Monolog\\Processor\\' . $class;
         }
@@ -313,10 +313,16 @@ class MonologFactory
         $bubble = (bool) $this->getParameter('bubble');
        
         if ($type) {            
-            $class = '\\Monolog\\Handler\\' . $type . 'Handler';
+            $class = $type . 'Handler';
+        } else {
+            $class = $handlerName;
         }
-                
-        $class = $this->getParameter('class', $class);      
+                       
+        $class = $this->getParameter('class', $class);
+
+        if (strpos('\\',$class)===false){
+            $class = '\\Monolog\\Handler\\' . $class;
+        }
         
         if ($class == null){
             $this->throwError('no type and no class given for handler');
